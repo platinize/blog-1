@@ -29,4 +29,9 @@ class User extends Authenticatable
     {
         $this->notify(new VerifyEmail);
     }
+
+    public function likes()
+    {
+        return $this->belongsToMany('App\Models\Post', 'likes', 'post_id', 'user_id');
+    }
 }

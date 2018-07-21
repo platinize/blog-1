@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePost;
 use Illuminate\Http\Request;
 
-class PostController extends Controller
+class View extends Controller
 {
-    public $perPage = 10;
     /**
      * Display a listing of the resource.
      *
@@ -15,11 +13,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::orderBy('id', 'DESC')
-            ->with('likes')
-            ->paginate($this->perPage);
-
-        return view('main', compact('posts'));
+        //
     }
 
     /**
@@ -29,7 +23,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.form');
+        //
     }
 
     /**
@@ -38,11 +32,9 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePost $request)
+    public function store(Request $request)
     {
-        $post = $request->all();
-        Post::insert($post);
-        return view('admin');
+        //
     }
 
     /**
@@ -53,9 +45,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::findOrFail($id);
-
-        return view('posts.post', compact('post'));
+        //
     }
 
     /**
@@ -66,9 +56,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $post = Post::findOrFail($id);
-
-        return view('posts.form', compact('post'));
+        //
     }
 
     /**
@@ -78,7 +66,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePost $request, $id)
+    public function update(Request $request, $id)
     {
         //
     }
