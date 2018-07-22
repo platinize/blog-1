@@ -8,11 +8,18 @@ class Post extends Model
 {
     protected $guarded = [];
 
-    public $fillable = ['title', 'thumbnail', 'summary', 'body'];
+    public $fillable = ['title', 'summary', 'body', 'slug', 'thumbnail'];
+
+    public $attributes = [];
+
+    public function __constract($data)
+    {
+        $this->attributes = $data;
+    }
 
     public function likes()
     {
-        return $this->belongsToMany('App\User', 'likes', 'user_id', 'post_id');
+        return $this->belongsToMany('App\User', 'likes', 'post_id', 'user_id');
     }
 
     public function views()
@@ -20,11 +27,22 @@ class Post extends Model
         return $this->hasMany('App\View');
     }
 
+    public function setSlug(): void
+    {
+        $this->attributes['slug'] = str_slug($this->attributes['title']);
+    }
+
+    public function getAttributes(): array
+    {
+        $this->setSlug();
+
+        return $this->attributes;
+    }
+
     public function setTitleAttribute(string $title): void
     {
         $this->attributes['title'] = $title;
 
         $this->slug = str_slug($title);
-
     }
 }

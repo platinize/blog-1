@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Post;
 
 class StorePost extends FormRequest
 {
@@ -13,7 +14,7 @@ class StorePost extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,14 +25,17 @@ class StorePost extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required|unique:posts',
+            'summary' => 'required',
+            'body' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            //
+            '*.required' => 'Поле не должно быть пустым.',
+            'title.unique' => 'Пост с таким заголовком уже существует.'
         ];
     }
 }

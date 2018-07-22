@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePost;
-use Illuminate\Http\Request;
+use App\Post;
 
 class PostController extends Controller
 {
@@ -29,7 +29,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.form');
+        return view('admin.posts.create');
     }
 
     /**
@@ -40,9 +40,11 @@ class PostController extends Controller
      */
     public function store(StorePost $request)
     {
-        $post = $request->all();
-        Post::insert($post);
-        return view('admin');
+        $post = new Post($request->all());
+
+        Post::insert($post->getAttributes());
+
+        return redirect()->route('admin.panel');
     }
 
     /**
@@ -51,9 +53,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::where('slug', $slug)->first();
 
         return view('posts.post', compact('post'));
     }
@@ -64,11 +66,11 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::where('slug', $slug)->first();
 
-        return view('posts.form', compact('post'));
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -78,9 +80,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePost $request, $id)
+    public function update(StorePost $request, $slug)
     {
-        //
+        $post = new Post($request->all());
+
+        Post::where('slug', $slug)->update($post->getAttributes());
+
+        return redirect()->route('admin.panel');
+
     }
 
     /**
@@ -91,6 +98,10 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Post::find($id)->likes()->detach();
+
+        Post::destroy($id);
+
+        return redirect()->route('admin.panel');
     }
 }

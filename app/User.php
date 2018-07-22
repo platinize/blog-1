@@ -5,10 +5,12 @@ namespace App;
 use App\Notifications\Auth\VerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasRoles;
 
     protected $fillable = [
         'name', 'email', 'password',
@@ -32,6 +34,6 @@ class User extends Authenticatable
 
     public function likes()
     {
-        return $this->belongsToMany('App\Models\Post', 'likes', 'post_id', 'user_id');
+        return $this->belongsToMany('App\Post', 'likes', 'user_id', 'post_id');
     }
 }
